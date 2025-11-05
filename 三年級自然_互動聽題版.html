@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>三年級自然 互動式聽題版（逐行點播）</title>
+  <style>
+    :root { --fs: 18px; }
+    body { font-family: system-ui, -apple-system, 'Noto Sans TC', 'Segoe UI', Roboto, 'PingFang TC', 'Heiti TC', 'Microsoft JhengHei', sans-serif; line-height: 1.6; margin: 0; font-size: var(--fs); }
+    header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eee; padding: 12px 16px; z-index: 10; }
+    header h1 { font-size: 1.1rem; margin: 0 0 8px; }
+    .controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .controls label { font-size: 0.9rem; }
+    .container { padding: 12px 16px 80px; }
+    .line { padding: 8px 10px; border-radius: 8px; margin: 2px 0; cursor: pointer; white-space: pre-wrap; }
+    .line:nth-child(odd) { background: #fafafa; }
+    .line:active, .line.reading { background: #e9f5ff; outline: 2px solid #bfe0ff; }
+    .section { margin: 18px 0 8px; font-weight: 700; }
+    .toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 10px 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    button { padding: 8px 12px; border-radius: 10px; border: 1px solid #ddd; background: #f7f7f7; font-size: 1rem; }
+    button:active { transform: translateY(1px); }
+    .meta { color: #666; font-size: 0.9rem; }
+    .fsval { min-width: 3.5em; display:inline-block; text-align:center; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>三年級自然 互動式聽題版（逐行點播）</h1>
+    <div class="controls">
+      <label>字級
+        <input id="fontsize" type="range" min="16" max="30" step="1" value="18" />
+        <span id="fsval" class="fsval">18px</span>
+      </label>
+      <label>語速
+        <input id="rate" type="range" min="0.6" max="1.4" step="0.05" value="1" />
+        <span id="rateVal">1.00×</span>
+      </label>
+      <button id="pauseBtn">暫停</button>
+      <button id="resumeBtn">繼續</button>
+      <button id="stopBtn">停止</button>
+      <span class="meta">提示：點一下任一行文字，即可朗讀該行（語音已鎖定繁體中文優先）。</span>
+    </div>
+  </header>
+
+  <div class="container" id="content"></div>
+
+  <div class="toolbar">
+    <button id="readSelectionBtn">朗讀選取文字</button>
+    <button id="readAllBtn">自動連播（從目前行起）</button>
+    <span class="meta">可雙擊某行以只播放該行；單擊後按自動連播可往下逐行朗讀。</span>
+  </div>
+
+  <textarea id="raw" style="display:none;">
+臺東縣卑南鄉太平國民小學114學年度上學期三年級自然領域期中定期評量卷
+命題教師：陳威呈老師  評量範圍：Ch1~Ch2      班級：三甲 座號：   姓名：__________
+
+一、選擇題：每格 2 分、共 20 分
+(　　)1. 有些料理會加入九層塔調味，這是將植物應用在生活中的什麼需求？　①食　②衣　③行　④育樂
+(　　)2. 牽牛花的莖有什麼特色？　①會攀爬在牆壁上　②長得高大且粗壯　③長度很短，幾乎看不到　④形狀很像愛心
+(　　)3. 箭頭所指的是辣椒的哪一個部位？　①果實　②根　③莖　④葉
+(　　)4. 軟枝黃蟬莖上的每個節會長三片以上的葉子，表示它的葉子生長方式為哪一種？　①對生　②互生　③輪生　④單生
+(　　)5. 「玫瑰的花是紅色的」是指花哪一個部位的顏色？　①花梗　②花瓣　③花萼　④花蕊
+(　　)6. 為什麼在水中擠壓海綿會產生很多小氣泡？　①海綿中有很多空氣　②海綿會製造空氣　③海綿中有水　④海綿的空隙會變大
+(　　)7. 將空的塑膠瓶放入水中，會有氣泡跑出來，表示塑膠瓶中含有什麼？　①空氣　②水　③海綿　④棉花
+(　　)8. 將紙團塞入杯底，杯口朝下垂直放入水中，再垂直拿起，紙團沒有溼，表示杯中含有什麼物質？　①空氣　②果凍　③水　④膠水
+(　　)9. 進行用空氣推動玩具車的實驗時，哪一種做法不適當？　①選用兩輛相同的玩具車　②在玩具車上加裝不同的紙杯　③只對其中一輛車子搧空氣　④玩具車的起始線要相同
+(　　)10. 在校園與日常生活中，哪一種現象不能說明空氣在流動？　①國旗飄動　②冰塊融化　③樹梢搖晃　④頭髮飄動
+
+二、是非題：每格 1 分、共 14 分
+(　　)1. 為了觀察植物的莖，除了用手摸一摸，也可以嘗一嘗樹皮的味道。
+(　　)2. 植物的花朵都長在根上，具有花萼、花瓣、雄蕊、雌蕊等構造。
+(　　)3. 切開木瓜和葡萄，發現裡面的種子一樣多。
+(　　)4. 當四季變化時，植物也可能會有不同的變化。
+(　　)5. 將空寶特瓶壓入水中，會發現瓶口冒出許多氣泡，氣泡浮到水面上就破掉了，這些氣泡就是空氣。
+(　　)6. 將紙團塞入紙杯後，斜放入水中，紙團不會溼掉。
+(　　)7. 空氣的形狀是固定的，只能用圓球狀的容器來裝。
+(　　)8. 空氣和水都具有「占有空間」、「沒有重量」的特性。
+(　　)9. 如果想要利用搧動空氣的方式推動玩具車，在車上加裝紙杯可以使作用面積增大，車子會移動得比較遠。
+(　　)10. 水的流動會產生風。
+(　　)11. 手擠壓充滿空氣的塑膠袋，塑膠袋會變形，是因為空氣可以被壓縮的關係。
+(　　)12. 有些榕樹的根會突出地面。
+(　　)13. 箭頭所指的部位是龍葵的莖。
+(　　)14. 所有植物的葉脈都是像網子一樣的網狀脈。
+
+三、勾選題：每格 1 分、共 16 分
+1. 下列哪些是風在生活中的應用？請在□中打ˇ：
+
+2. 那些植物的葉序是輪生？請在□中打ˇ：
+
+3. 請問下列圖片中，哪一種的根屬於「軸根」？請在□中打ˇ：
+
+4. 下列有關空氣的敘述，哪些正確？請在（　）裡打ˇ：
+(　　)(１)只要有縫隙就會有空氣。
+(　　)(２)空氣看起來是白白的。
+(　　)(３)動物生存需要呼吸空氣。
+(　　)(４)空氣有固定的形狀。
+四、連連看：每格 1 分、共 16 分
+1. 箭頭所指的各部位名稱為什麼？請畫線連起來：
+
+2. 箭頭所指的花朵各部位名稱為何？請畫線連起來：
+
+3. 風應用在生活中的例子是下列哪些？請畫線連連看：
+
+4. 這些例子分別是利用什麼物質傳送動力的？請畫線連起來：
+
+五、是的打ˇ．不是的打╳：每格 1 分、共 14 分
+1. 下列哪些是屬於植物身體的一部分？請在（　）裡打ˇ，不是的打╳：
+(　　)(１)根
+(　　)(２)翅膀
+(　　)(３)葉
+(　　)(４)手
+(　　)(５)果實
+(　　)(６)莖
+(　　)(７)腳
+(　　)(８)花
+
+2. 製作一個紙偶放在桌上，下列哪些做法能將紙偶吹倒？請在（　）裡打ˇ，不能的打╳：
+(　　)(１)用墊板對著紙偶搧動。
+(　　)(２)把墊板放在桌上 。
+(　　)(３)用嘴巴對著紙偶吹氣。
+(　　)(４)打開電風扇，讓電風扇對著紙偶吹。
+(　　)(５)將充滿空氣的氣球對紙偶放出空氣。
+(　　)(６)打開電燈。
+
+六、圈圈看：每格 1 分、共 8 分
+1. 到學校觀察各種葉子中，哪一些屬於網狀脈？請把它圈出來：
+
+2. 哪些例子和「利用水傳送動力，使物品改變位置」有關？請圈起來：
+
+七、科學閱讀：每格 2 分、共 12 分
+1. 世界上最大的花是大王花，它分布在印尼等地的熱帶雨林之中，直徑超過一公尺，是花中的巨無霸。它的花期只有四天，花期結束後，就會凋謝並腐爛成黑色的黏性物質並散發出腐臭的氣味，因此又稱它為「腐屍花」。
+大王花的果實是直徑約15公分的棕色球體，裡面充滿了乳白色的果肉以及上千個的紅棕色種子。當動物吃下肚時，或以爪子挖果肉，種子就會藉由動物的皮毛和爪子和糞便傳播出去。
+下列有關這篇文章的敘述，哪些正確？請在（　）裡打ˇ，錯誤的打╳：
+(　　)(１)大王花是先長出果實之後再長出巨大花朵。
+(　　)(２)大王花的種子長在果實裡面。
+(　　)(３)大王花因為凋謝時會散發出腐臭難聞的氣味，所以又被稱為「腐屍花」。
+2. 請閱讀以下文章並回答下列問題：
+　　下雨天，雨傘就是我們不可或缺的重要物品，但你可以想像一個沒有傘布和骨架只有傘柄的物品也能夠遮雨嗎？
+　　這個高科技的產品稱為「空氣傘」。拿著空氣傘遮雨，就像拿著一臺無扇葉風扇在手中一樣。空氣傘的馬達吸入空氣，然後高速將空氣噴出帶動其他空氣流動形成風，也就是利用風力將雨隔絕開，形成如同雨傘的空氣盾，達到阻隔雨水的效果。
+　　但是這個發明卻受到許多質疑，包含空氣傘充電之後只能運轉30分鐘，以及重量太重、體積太大的問題。所以目前大眾對這產品還是存著觀望的態度，就算空氣傘量產了，可能還是無法取代傳統的雨傘。
+(　　)(１)下列有關空氣傘的敘述哪項錯誤？　①沒有遮雨的傘布，只有一隻傘柄　②和一般雨傘一樣須撐開傘布才能使用　③空氣雨傘須充電
+(　　)(２)下列哪一種東西的運作原理類似空氣傘？　①無扇葉電風扇　②電腦　③風力發電
+(　　)(３)為什麼空氣雨傘可能無法取代傳統雨傘？　①充電後只能短時間使用　②重量太重　③體積太大　④以上皆是
+  </textarea>
+
+  <script>
+  (function(){
+    // 字級控制
+    const fs = document.getElementById('fontsize');
+    const fsval = document.getElementById('fsval');
+    const root = document.documentElement;
+    const setFS = () => { root.style.setProperty('--fs', fs.value + 'px'); fsval.textContent = fs.value + 'px'; };
+    fs.addEventListener('input', setFS); setFS();
+
+    const raw = document.getElementById('raw').value;
+    const content = document.getElementById('content');
+
+    // 逐行拆分
+    const lines = raw.split(/\r?\n/);
+    lines.forEach(txt => {
+      const t = txt.trimEnd();
+      if (!t) { const br = document.createElement('div'); br.style.height = '6px'; content.appendChild(br); return; }
+      const isSection = /^[一二三四五六七八九十]+、/.test(t) || /^臺東縣|^命題教師|^成績範圍|^家長簽名|^得分$/.test(t);
+      const el = document.createElement('div');
+      el.textContent = t;
+      el.className = isSection ? 'section' : 'line';
+      if (/^\d+\./.test(t) || /^[（(]/.test(t) || /^[\uFF08(]\s*[　\s]*\d+/.test(t)) {
+        el.className = 'line';
+      }
+      content.appendChild(el);
+    });
+
+    const synth = window.speechSynthesis;
+    let voices = [];
+    let currentNode = null;
+
+    // 繁體中文語音優先
+    function pickZhTW(vs) {
+      let v = vs.find(v => /zh-TW|zh_Hant|zh-HK/i.test(v.lang));
+      if (!v) v = vs.find(v => /^zh/i.test(v.lang));
+      return v || null;
+    }
+    function populateVoices() { voices = synth.getVoices(); }
+    populateVoices();
+    if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = populateVoices;
+    }
+
+    const rateEl = document.getElementById('rate');
+    const rateVal = document.getElementById('rateVal');
+    rateEl.addEventListener('input', () => rateVal.textContent = parseFloat(rateEl.value).toFixed(2) + '×');
+    rateVal.textContent = parseFloat(rateEl.value).toFixed(2) + '×';
+
+    function stop() {
+      if (synth.speaking || synth.pending) synth.cancel();
+      if (currentNode) currentNode.classList.remove('reading');
+      currentNode = null;
+    }
+    function speak(text, node=null) {
+      stop();
+      const ut = new SpeechSynthesisUtterance(text);
+      ut.rate = parseFloat(rateEl.value);
+      const chosen = pickZhTW(voices);
+      if (chosen) ut.voice = chosen;
+      ut.onend = () => { if (node) node.classList.remove('reading'); currentNode = null; };
+      ut.onerror = () => { if (node) node.classList.remove('reading'); currentNode = null; };
+      if (node) node.classList.add('reading');
+      currentNode = node;
+      synth.speak(ut);
+    }
+
+    document.getElementById('content').addEventListener('click', (e) => {
+      const node = e.target.closest('.line');
+      if (!node) return;
+      speak(node.textContent.trim(), node);
+    });
+
+    document.getElementById('content').addEventListener('dblclick', (e) => {
+      const node = e.target.closest('.line');
+      if (!node) return;
+      speak(node.textContent.trim(), node);
+    });
+
+    document.getElementById('readAllBtn').addEventListener('click', () => {
+      const lines = Array.from(document.querySelectorAll('.line'));
+      let startIndex = lines.findIndex(el => el.classList.contains('reading'));
+      if (startIndex < 0) {
+        const top = window.scrollY;
+        startIndex = lines.findIndex(el => el.offsetTop >= top - 10);
+        if (startIndex < 0) startIndex = 0;
+      }
+      let i = startIndex;
+      const playNext = () => {
+        if (i >= lines.length) return;
+        const el = lines[i++];
+        window.scrollTo({ top: Math.max(0, el.offsetTop - 80), behavior: 'smooth' });
+        speak(el.textContent.trim(), el, playNext);
+      };
+      playNext();
+    });
+
+    document.getElementById('readSelectionBtn').addEventListener('click', () => {
+      const sel = window.getSelection();
+      const text = (sel && sel.toString().trim()) || '';
+      if (text) speak(text);
+    });
+
+    document.getElementById('pauseBtn').addEventListener('click', () => { if (synth.speaking) synth.pause(); });
+    document.getElementById('resumeBtn').addEventListener('click', () => { if (synth.paused) synth.resume(); });
+    document.getElementById('stopBtn').addEventListener('click', stop);
+  })();
+  </script>
+</body>
+</html>
