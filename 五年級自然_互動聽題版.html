@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>五年級自然 互動聽題版（點行朗讀）</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Noto Sans TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; margin: 0; }
+    header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eee; padding: 12px 16px; z-index: 10; }
+    header h1 { font-size: 1.1rem; margin: 0 0 8px; }
+    .controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .controls label { font-size: 0.9rem; }
+    .container { padding: 12px 16px 80px; }
+    .line { padding: 8px 10px; border-radius: 8px; margin: 2px 0; cursor: pointer; }
+    .line:nth-child(odd) { background: #fafafa; }
+    .line:active, .line.reading { background: #e9f5ff; outline: 2px solid #bfe0ff; }
+    .section { margin: 18px 0 8px; font-weight: 700; }
+    .toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 10px 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    button { padding: 8px 12px; border-radius: 10px; border: 1px solid #ddd; background: #f7f7f7; font-size: 1rem; }
+    button:active { transform: translateY(1px); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    .meta { color: #666; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>五年級自然 互動聽題版（點行朗讀）</h1>
+    <div class="controls">
+      <label>語速
+        <input id="rate" type="range" min="0.6" max="1.4" step="0.05" value="1" />
+        <span id="rateVal">1.00×</span>
+      </label>
+      <label>語音
+        <select id="voiceSelect"></select>
+      </label>
+      <button id="pauseBtn">暫停</button>
+      <button id="resumeBtn">繼續</button>
+      <button id="stopBtn">停止</button>
+      <span class="meta">提示：點一下任一題目或任一行文字，即可朗讀該行。</span>
+    </div>
+  </header>
+
+  <div class="container" id="content"></div>
+
+  <div class="toolbar">
+    <button id="readSelectionBtn">朗讀選取文字</button>
+    <button id="readAllBtn">自動連播（從目前行起）</button>
+    <span class="meta">可雙擊某行以只播放該行；單擊後按自動連播可往下逐行朗讀。</span>
+  </div>
+
+  <textarea id="raw" class="sr-only">
+台東縣卑南鄉太平國民小學114學年度上學期五年級自然科學期中定期評量卷
+命題教師：楊芝庭老師 評量範圍：單元1～單元2 班級：五年級 座號：    姓名：                
+
+一、是非題：每格 2 分、共 14 分
+(　　)1. 植物開花後，雄蕊上的花粉傳到雌蕊上的過程稱為「授粉」。 
+(　　)2. 植物除了用種子外，無法利用其他方式繁殖。
+(　　)3. 因為光的折射，讓我們從岸上看不準池水的深度，所以玩水時要特別注意戲水的安全。
+(　　)4. 植物由根吸收水分,經由葉子散發到空氣中的現象稱為「蒸發作用」。 
+(　　)5. 生長在沼澤地區的毛氈苔構造十分特別，葉子上具有會分泌黏液的觸毛，可以用來捕捉昆蟲。
+(　　)6. 有些植物在冬天時會落葉，藉以減少水分的散失。
+(　　)7. 就算世界上的昆蟲減少了，也不會影響植物的傳播花粉。
+
+二、選擇題：每格 2 分、共 20 分
+(　　)1. 光從空氣照入水中改變方向稱為？ ①雷射 ②反射 ③入射 ④折射
+(　　)2. 小華在北回歸線觀測，太陽日出為東偏北，這是：①春分 ②夏至 ③冬至 ④秋分
+(　　)3. 進行蒸散與製造養分的構造？ ①種子 ②根 ③莖 ④葉
+(　　)4. 關於彩虹何者錯誤？ ①只有單一顏色 ②陽光照到空氣中的小水滴所產生 ③與折射、反射有關 ④沒有光就不會有彩虹
+(　　)5. 下列何者不是營養器官的功能？ ①吸收營養 ②運輸水分 ③製造養分 ④繁衍後代
+(　　)6. 關於授粉何者正確？ ①可依靠動物協助 ②指雌蕊上的花粉到柱頭的過程 ③授粉後胚珠發育成果實 ④未經授粉也可結果
+(　　)7. 經濟植物何者不正確？ ①生長快速利於產業 ②無法人工栽培 ③受人喜愛 ④蘭花、茶樹皆屬之
+(　　)8. 魔鬼氈靈感來自大花咸豐草的哪個構造？ ①葉 ②花 ③果實 ④根
+(　　)9. 折射發生在何處？ ①水面與空氣交界 ②空氣中 ③水中 ④不會發生
+(　　)10. 根浸入有色水後葉子變色原因？ ①葉子直接吸到 ②根吸水後輸送到葉 ③莖將水散發到空氣 ④莖吸水後由根散發
+
+三、對的畫○，錯的打×：每格 1 分、共 15分
+1. 太陽高度角怎麼測量？（圖題）
+2. 光由空氣進入水中時的行進？（圖題）
+3. 哪些植物可由莖長出新芽？（圖題）
+4. 關於植物體組成哪項正確？
+(1) 花果種屬於營養器官　(2) 根莖葉屬於繁殖器官
+5. 葉的適應：聖誕紅、仙人掌、毛氈苔、捕蠅草（多選敘述）
+
+四、配合題：每格 1 分、共 15 分
+1. 植物構造圖：子房、胚珠、種子、果實等對應。
+2. 三條弧線對應四季代表日軌跡。
+3. 植物果實與種子傳播方式配對。
+4. 根、莖、葉特殊形態配對：仙人掌、白蘿蔔、榕樹、馬鈴薯。
+
+五、看圖回答：每格 1 分、共 5 分
+太陽高度角觀測器情境題（方位、時段、測量標示、單位、影子變化）。
+
+六、圈出正確答案：每格 1 分、共 7 分
+1. 放大鏡的透鏡性質與成像描述。
+2. 製造彩虹的正確方式（背向陽光、面向陽光、噴水霧等）。
+
+七、填充題：每格 2 分、共 14 分
+（細胞→組織→器官→個體；光合作用：水、二氧化碳、養分、氧氣）
+
+八、科學閱讀：每格 2 分、共 10 分
+永晝永夜與夏至冬至短文；北回歸線相關選擇題與臺灣經過縣市判斷。
+</textarea>
+
+  <script>
+  (function(){
+    const raw = document.getElementById('raw').value;
+    const content = document.getElementById('content');
+
+    const lines = raw.split(/\r?\n/);
+    lines.forEach(txt => {
+      const t = txt.trimEnd();
+      if (!t) { const br = document.createElement('div'); br.style.height = '6px'; content.appendChild(br); return; }
+
+      const isSection = /^[一二三四五六七八九十]+、/.test(t) || /^臺東縣|^台東縣|^命題教師/.test(t);
+      const el = document.createElement('div');
+      el.textContent = t;
+      el.className = isSection ? 'section' : 'line';
+      if (/^\d+\./.test(t) || /^[（(]/.test(t)) { el.className = 'line'; }
+      content.appendChild(el);
+    });
+
+    const synth = window.speechSynthesis;
+    let voices = [];
+    let currentUtterance = null;
+    let currentNode = null;
+
+    function populateVoices() {
+      voices = synth.getVoices();
+      const sel = document.getElementById('voiceSelect');
+      sel.innerHTML = '';
+      const preferred = voices.filter(v => /zh-TW|zh_Hant|zh-HK/i.test(v.lang));
+      const secondary = voices.filter(v => /zh-CN|zh/i.test(v.lang) && !preferred.includes(v));
+      const others = voices.filter(v => !/zh/i.test(v.lang));
+      const ordered = [...preferred, ...secondary, ...others];
+      ordered.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.name;
+        opt.textContent = `${v.name} (${v.lang})`;
+        sel.appendChild(opt);
+      });
+      if (preferred.length) sel.value = preferred[0].name;
+    }
+    populateVoices();
+    if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = populateVoices;
+    }
+
+    const rateEl = document.getElementById('rate');
+    const rateVal = document.getElementById('rateVal');
+    rateEl.addEventListener('input', () => rateVal.textContent = parseFloat(rateEl.value).toFixed(2) + '×');
+    rateVal.textContent = parseFloat(rateEl.value).toFixed(2) + '×';
+
+    function speak(text, node=null, onend=null) {
+      stop();
+      const ut = new SpeechSynthesisUtterance(text);
+      ut.rate = parseFloat(rateEl.value);
+      const sel = document.getElementById('voiceSelect');
+      const chosen = voices.find(v => v.name === sel.value);
+      if (chosen) ut.voice = chosen;
+
+      ut.onend = () => { if (node) node.classList.remove('reading'); currentUtterance = null; currentNode = null; if (onend) onend(); };
+      ut.onerror = () => { if (node) node.classList.remove('reading'); currentUtterance = null; currentNode = null; };
+      if (node) node.classList.add('reading');
+      currentUtterance = ut; currentNode = node;
+      synth.speak(ut);
+    }
+
+    function stop() {
+      if (synth.speaking || synth.pending) synth.cancel();
+      if (currentNode) currentNode.classList.remove('reading');
+      currentUtterance = null; currentNode = null;
+    }
+
+    document.getElementById('content').addEventListener('click', (e) => {
+      const node = e.target.closest('.line'); if (!node) return;
+      speak(node.textContent.trim(), node);
+    });
+
+    document.getElementById('content').addEventListener('dblclick', (e) => {
+      const node = e.target.closest('.line'); if (!node) return;
+      speak(node.textContent.trim(), node);
+    });
+
+    document.getElementById('readAllBtn').addEventListener('click', () => {
+      const lines = Array.from(document.querySelectorAll('.line'));
+      let startIndex = lines.findIndex(el => el.classList.contains('reading'));
+      if (startIndex < 0) {
+        const top = window.scrollY;
+        startIndex = lines.findIndex(el => el.offsetTop >= top - 10);
+        if (startIndex < 0) startIndex = 0;
+      }
+      let i = startIndex;
+      const playNext = () => {
+        if (i >= lines.length) return;
+        const el = lines[i++];
+        window.scrollTo({ top: Math.max(0, el.offsetTop - 80), behavior: 'smooth' });
+        speak(el.textContent.trim(), el, playNext);
+      };
+      playNext();
+    });
+
+    document.getElementById('readSelectionBtn').addEventListener('click', () => {
+      const sel = window.getSelection();
+      const text = (sel && sel.toString().trim()) || '';
+      if (text) speak(text);
+    });
+
+    document.getElementById('pauseBtn').addEventListener('click', () => { if (synth.speaking) synth.pause(); });
+    document.getElementById('resumeBtn').addEventListener('click', () => { if (synth.paused) synth.resume(); });
+    document.getElementById('stopBtn').addEventListener('click', stop);
+  })();
+  </script>
+</body>
+</html>
