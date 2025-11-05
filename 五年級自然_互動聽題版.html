@@ -3,40 +3,42 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>五年級自然 互動聽題版（點行朗讀）</title>
+  <title>五年級自然 互動式聽題版（逐行點播）</title>
   <style>
-    body { font-family: system-ui, -apple-system, "Noto Sans TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; margin: 0; }
+    :root { --fs: 18px; }
+    body { font-family: system-ui, -apple-system, 'Noto Sans TC', 'Segoe UI', Roboto, 'PingFang TC', 'Heiti TC', 'Microsoft JhengHei', sans-serif; line-height: 1.6; margin: 0; font-size: var(--fs); }
     header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eee; padding: 12px 16px; z-index: 10; }
     header h1 { font-size: 1.1rem; margin: 0 0 8px; }
     .controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
     .controls label { font-size: 0.9rem; }
     .container { padding: 12px 16px 80px; }
-    .line { padding: 8px 10px; border-radius: 8px; margin: 2px 0; cursor: pointer; }
+    .line { padding: 8px 10px; border-radius: 8px; margin: 2px 0; cursor: pointer; white-space: pre-wrap; }
     .line:nth-child(odd) { background: #fafafa; }
     .line:active, .line.reading { background: #e9f5ff; outline: 2px solid #bfe0ff; }
     .section { margin: 18px 0 8px; font-weight: 700; }
     .toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 10px 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
     button { padding: 8px 12px; border-radius: 10px; border: 1px solid #ddd; background: #f7f7f7; font-size: 1rem; }
     button:active { transform: translateY(1px); }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
     .meta { color: #666; font-size: 0.9rem; }
+    .fsval { min-width: 3.5em; display:inline-block; text-align:center; }
   </style>
 </head>
 <body>
   <header>
-    <h1>五年級自然 互動聽題版（點行朗讀）</h1>
+    <h1>五年級自然 互動式聽題版（逐行點播）</h1>
     <div class="controls">
+      <label>字級
+        <input id="fontsize" type="range" min="16" max="30" step="1" value="18" />
+        <span id="fsval" class="fsval">18px</span>
+      </label>
       <label>語速
         <input id="rate" type="range" min="0.6" max="1.4" step="0.05" value="1" />
         <span id="rateVal">1.00×</span>
       </label>
-      <label>語音
-        <select id="voiceSelect"></select>
-      </label>
       <button id="pauseBtn">暫停</button>
       <button id="resumeBtn">繼續</button>
       <button id="stopBtn">停止</button>
-      <span class="meta">提示：點一下任一題目或任一行文字，即可朗讀該行。</span>
+      <span class="meta">提示：點一下任一行文字，即可朗讀該行（語音已鎖定繁體中文優先）。</span>
     </div>
   </header>
 
@@ -48,98 +50,145 @@
     <span class="meta">可雙擊某行以只播放該行；單擊後按自動連播可往下逐行朗讀。</span>
   </div>
 
-  <textarea id="raw" class="sr-only">
+  <!-- 原始考卷文字：逐字保留（不改寫、不總結、不分析） -->
+  <textarea id="raw" style="display:none;">
 台東縣卑南鄉太平國民小學114學年度上學期五年級自然科學期中定期評量卷
 命題教師：楊芝庭老師 評量範圍：單元1～單元2 班級：五年級 座號：    姓名：                
 
 一、是非題：每格 2 分、共 14 分
-(　　)1. 植物開花後，雄蕊上的花粉傳到雌蕊上的過程稱為「授粉」。 
+(　　)1. 植物開花後，雄蕊上的花粉傳到雌蕊上的過程稱為「授粉」。
 (　　)2. 植物除了用種子外，無法利用其他方式繁殖。
 (　　)3. 因為光的折射，讓我們從岸上看不準池水的深度，所以玩水時要特別注意戲水的安全。
-(　　)4. 植物由根吸收水分,經由葉子散發到空氣中的現象稱為「蒸發作用」。 
+(　　)4. 植物由根吸收水分,經由葉子散發到空氣中的現象稱為「蒸發作用」。
 (　　)5. 生長在沼澤地區的毛氈苔構造十分特別，葉子上具有會分泌黏液的觸毛，可以用來捕捉昆蟲。
 (　　)6. 有些植物在冬天時會落葉，藉以減少水分的散失。
 (　　)7. 就算世界上的昆蟲減少了，也不會影響植物的傳播花粉。
-
 二、選擇題：每格 2 分、共 20 分
-(　　)1. 光從空氣照入水中改變方向稱為？ ①雷射 ②反射 ③入射 ④折射
-(　　)2. 小華在北回歸線觀測，太陽日出為東偏北，這是：①春分 ②夏至 ③冬至 ④秋分
-(　　)3. 進行蒸散與製造養分的構造？ ①種子 ②根 ③莖 ④葉
-(　　)4. 關於彩虹何者錯誤？ ①只有單一顏色 ②陽光照到空氣中的小水滴所產生 ③與折射、反射有關 ④沒有光就不會有彩虹
-(　　)5. 下列何者不是營養器官的功能？ ①吸收營養 ②運輸水分 ③製造養分 ④繁衍後代
-(　　)6. 關於授粉何者正確？ ①可依靠動物協助 ②指雌蕊上的花粉到柱頭的過程 ③授粉後胚珠發育成果實 ④未經授粉也可結果
-(　　)7. 經濟植物何者不正確？ ①生長快速利於產業 ②無法人工栽培 ③受人喜愛 ④蘭花、茶樹皆屬之
-(　　)8. 魔鬼氈靈感來自大花咸豐草的哪個構造？ ①葉 ②花 ③果實 ④根
-(　　)9. 折射發生在何處？ ①水面與空氣交界 ②空氣中 ③水中 ④不會發生
-(　　)10. 根浸入有色水後葉子變色原因？ ①葉子直接吸到 ②根吸水後輸送到葉 ③莖將水散發到空氣 ④莖吸水後由根散發
-
+(　　)1. 由斜上方直線前進的光，從空氣中照入水中時，光會改變行進方向，這個現象稱為什麼？　①雷射　②反射　③入射　④折射
+(　　)2. 小華在北回歸線經過的地區觀測太陽，某日他觀測到太陽日出方位是東偏北方，請問這是四季代表日的哪一天？　①春分 ②夏至　③冬至　④秋分
+(　　)3. 植物的哪一個構造通常具有進行蒸散作用和製造養分的功能？　①種子　②根　③莖　④葉
+(　　)4. 關於自然界中出現的彩虹，下列哪一項敘述錯誤？　①只具有單一顏色的光　②是陽光照射到空氣中的小水滴而產生的現象　③和光的折射現象及反射現象有關　④如果環境中沒有光，就不會產生彩虹
+(　　)5. 下列哪一項通常不是植物營養器官具有的功能？　①吸收營養　②運輸水分　③製造養分　④繁衍後代
+(　　)6. 關於「授粉」的敘述，下列何者正確？ 　①有些植物會依靠動物的力量來協助授粉　②指的是雌蕊上的花粉傳到柱頭上的過程　③授粉後，胚珠會發育成果實　④未經授粉的花也可以結成果實
+(　　)7. 有關「經濟植物」的敘述，何者不正確？　①生長快速，對增加產業收入有幫助　②無法人工栽培　③受到人們喜愛　④蘭花、茶樹皆是屬於經濟植物。
+(　　)8. 發明魔鬼氈的人主要是觀察到大花咸豐草的哪一個構造而產生靈感？　①葉　②花　③果實　④根
+(　　)9. 光線自空氣斜照入水中，會在什麼地方產生折射？　①水面與空氣的交界　②空氣中　③水中　④光線不會產生折射現象
+(　　)10. 小明將植物的根浸入有色水中，為什麼一段時間後，植物的葉子會變色呢？　①葉子直接吸到有顏色的水　②根吸水後輸送到葉子　③莖將水散發到空氣　④莖吸水後由根散發到空氣
 三、對的畫○，錯的打×：每格 1 分、共 15分
-1. 太陽高度角怎麼測量？（圖題）
-2. 光由空氣進入水中時的行進？（圖題）
-3. 哪些植物可由莖長出新芽？（圖題）
-4. 關於植物體組成哪項正確？
-(1) 花果種屬於營養器官　(2) 根莖葉屬於繁殖器官
-5. 葉的適應：聖誕紅、仙人掌、毛氈苔、捕蠅草（多選敘述）
+1. 你知道太陽的高度角要怎麼測量嗎？ 
 
-四、配合題：每格 1 分、共 15 分
-1. 植物構造圖：子房、胚珠、種子、果實等對應。
-2. 三條弧線對應四季代表日軌跡。
-3. 植物果實與種子傳播方式配對。
-4. 根、莖、葉特殊形態配對：仙人掌、白蘿蔔、榕樹、馬鈴薯。
+2. 光由空氣進入水中時，會如何行進？ 
 
-五、看圖回答：每格 1 分、共 5 分
-太陽高度角觀測器情境題（方位、時段、測量標示、單位、影子變化）。
+3. 哪些植物可以利用莖長出新芽？ 
 
+4. 關於植物體的組成，下列哪些敘述正確？ 
+(　　)(1)花、果實和種子的主要功能是吸收營養，屬於營養器官。
+(　　)(2)根、莖和葉的主要功能是繁衍後代，屬於繁殖器官。
+
+5. 為了適應環境，植物可能會發展出不同功能和外形的葉。關於植物的葉，下列哪些敘述正確？ 
+(　　)(１)聖誕紅的紅色葉看起來很像花瓣，可以吸引昆蟲幫忙傳播花粉。
+(　　)(２)仙人掌有肥厚的葉，可以用來儲藏水分和養分。
+(　　)(３)毛氈苔的葉子會分泌黏液的觸毛，可以用來捕捉昆蟲。
+(　　)(４)捕蠅草的葉子長得像夾子，內側有能吸引昆蟲的蜜液。
+
+四、配合題，將正確的代號填入（　）裡：每格 1 分、共 15 分
+1. 下圖為植物的構造圖：
+(１)圖中的（　　　）是子房，ㄆ是胚珠，（　　　）是種子，ㄈ是果實。
+(２)在植物發育的過程中，ㄈ是由（　　　）發育而成，而ㄇ則是由（　　　）發育而成。
+
+2. 下圖中有三條弧線，分別是四季代表日中，哪一天的太陽運行軌跡？ 
+ 
+3. 下列植物分別利用什麼方式傳播果實和種子？請將符合題意的代號填在□中：
+
+4. 根、莖、葉各有什麼特殊形態？ 
+	ㄅ.仙人掌
+	ㄆ. 白蘿蔔
+	ㄇ.榕樹
+	ㄈ.馬鈴薯
+(　　)(１) 塊根，可以儲藏養分，經常被拿來食用。
+(　　)(２) 塊莖，可以儲藏養分，也經常被拿來食用。
+(　　)(３)葉呈針狀，可以減少水分的散失。
+(　　)(４)具有氣生根，可以吸收空氣中的水分。
+
+五、看圖回答問題：每格 1 分、共 5 分
+1. 嘉涵使用自己製作的太陽高度角觀測器觀測太陽，看圖回答下列問題。
+
+
+（　）(１)此時太陽位在　１)西方　２)東方　３)西南方　４)東北方。
+（　）(２)此時最可能是　１)上午　7　時　２)中午　12　時　３)下午　3　時　４)下午　7　時。
+（　）(３)嘉涵要記錄此時的太陽高度角，她應該測量　１)　A　２)　B　３)　C　４)　D。
+（　）(４)測量後，嘉涵應該如何記錄太陽高度角？　１)　20　公分　２)　20　度　３)　20　℃　４)西南方。
+（　）(５)嘉涵每一小時觀測一次太陽，8小時後會發現影子如何變化？　１)方位由東往西，再由西往東移動　２)長度變長　３)長度由長變短，再由短變長　４)沒有任何變化
 六、圈出正確答案：每格 1 分、共 7 分
-1. 放大鏡的透鏡性質與成像描述。
-2. 製造彩虹的正確方式（背向陽光、面向陽光、噴水霧等）。
+1. 下列有關「放大鏡」的敘述，請將正確的圈起來：
+放大鏡是(中間厚、邊緣薄/中間薄、邊緣厚)的透鏡。
+光經過放大鏡時，會產生( 反射/偏折 )並將光( 匯聚/發散 )。
+調整眼睛、放大鏡及物體間的距離，可看到(縮小、變形、變淡/放大、倒立、模糊)等影像。
+2. 將正確製造「彩虹」的方式圈起來：背向( 陽光/陰暗 )，面向( 陽光/陰暗 )
+，調整角度噴( 水柱/水霧 )，可以看見彩虹的色光。
 
-七、填充題：每格 2 分、共 14 分
-（細胞→組織→器官→個體；光合作用：水、二氧化碳、養分、氧氣）
+七、填充題，將正確的答案填入(   )中：每格 2 分、共 14 分
+	二氧化碳
+	氧氣
+	細胞
+	水
+	個體
+	器官
+	養分
+	
+1. 植物體不同層次構造，由小(基本單位)排到大。
 
+2. 填入「光合作用」的過程：
 八、科學閱讀：每格 2 分、共 10 分
-永晝永夜與夏至冬至短文；北回歸線相關選擇題與臺灣經過縣市判斷。
-</textarea>
+1. 閔佑和家人暑假到挪威旅遊，發現了夏天時太陽都不會下山，覺得很新奇，回家後他上網查了相關資料，請根據資料回答下列問題。
+　　夏至時太陽直射北回歸線，所以北半球的人們會感覺日出較早，日落較晚，有晝長夜短的現象。在北極圈內，甚至有日不落的永晝現象。冬至時，太陽直射南回歸線，北半球的人們會感覺日出較晚，日落較早，有晝短夜長的現象。相反的，在北極圈內就會有不見太陽的永夜現象。挪威位於北歐地區，有部分土地位於北極圈內，因此每到夏季　6　到　8　月的時間，太陽不會下山；而冬季的　11　月至隔年的　1　月，則是終日看不見太陽。
+（　）(1)夏至時太陽直射地球的哪一個部分？　１)赤道　２)北回歸線　３)南回歸線　４)北極。
+（　）(2)冬至時太陽直射地球的哪一個部分？　１)北極　２)北回歸線　３)赤道　４)南回歸線。
+（　）(3)如果閔佑在冬至的時候，到位於北極圈的地區內，他會看到什麼景象？　１)晝短夜長　２)永夜　３)晝長夜短　４)永晝。
+（　）(4)位於北半球北回歸線附近的地區，夏至時可以發現什麼現象？　１)永晝　２)永夜　３)晝短夜長　４)晝長夜短。
+（　）(5)北回歸線不會經過臺灣的哪一個縣市？　１)花蓮　２)嘉義　３)南投　４)新竹。
+
+  </textarea>
 
   <script>
   (function(){
+    // 字級控制
+    const fs = document.getElementById('fontsize');
+    const fsval = document.getElementById('fsval');
+    const root = document.documentElement;
+    const setFS = () => { root.style.setProperty('--fs', fs.value + 'px'); fsval.textContent = fs.value + 'px'; };
+    fs.addEventListener('input', setFS); setFS();
+
     const raw = document.getElementById('raw').value;
     const content = document.getElementById('content');
 
+    // 逐行拆分
     const lines = raw.split(/\r?\n/);
     lines.forEach(txt => {
       const t = txt.trimEnd();
       if (!t) { const br = document.createElement('div'); br.style.height = '6px'; content.appendChild(br); return; }
-
-      const isSection = /^[一二三四五六七八九十]+、/.test(t) || /^臺東縣|^台東縣|^命題教師/.test(t);
+      const isSection = /^[一二三四五六七八九十]+、/.test(t) || /^臺東縣|^命題教師|^成績範圍|^家長簽名|^得分$/.test(t);
       const el = document.createElement('div');
-      el.textContent = t;
+      el.textContent = t;                 // 逐字保留原文
       el.className = isSection ? 'section' : 'line';
-      if (/^\d+\./.test(t) || /^[（(]/.test(t)) { el.className = 'line'; }
+      // 題號/括號等行強制可點播
+      if (/^\d+\./.test(t) || /^[（(]/.test(t) || /^[\uFF08(]\s*[　\s]*\d+/.test(t)) {
+        el.className = 'line';
+      }
       content.appendChild(el);
     });
 
     const synth = window.speechSynthesis;
     let voices = [];
-    let currentUtterance = null;
     let currentNode = null;
 
-    function populateVoices() {
-      voices = synth.getVoices();
-      const sel = document.getElementById('voiceSelect');
-      sel.innerHTML = '';
-      const preferred = voices.filter(v => /zh-TW|zh_Hant|zh-HK/i.test(v.lang));
-      const secondary = voices.filter(v => /zh-CN|zh/i.test(v.lang) && !preferred.includes(v));
-      const others = voices.filter(v => !/zh/i.test(v.lang));
-      const ordered = [...preferred, ...secondary, ...others];
-      ordered.forEach(v => {
-        const opt = document.createElement('option');
-        opt.value = v.name;
-        opt.textContent = `${v.name} (${v.lang})`;
-        sel.appendChild(opt);
-      });
-      if (preferred.length) sel.value = preferred[0].name;
+    // 繁體中文語音優先
+    function pickZhTW(vs) {
+      let v = vs.find(v => /zh-TW|zh_Hant|zh-HK/i.test(v.lang));
+      if (!v) v = vs.find(v => /^zh/i.test(v.lang));
+      return v || null;
     }
+    function populateVoices() { voices = synth.getVoices(); }
     populateVoices();
     if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
       speechSynthesis.onvoiceschanged = populateVoices;
@@ -150,37 +199,37 @@
     rateEl.addEventListener('input', () => rateVal.textContent = parseFloat(rateEl.value).toFixed(2) + '×');
     rateVal.textContent = parseFloat(rateEl.value).toFixed(2) + '×';
 
-    function speak(text, node=null, onend=null) {
-      stop();
-      const ut = new SpeechSynthesisUtterance(text);
-      ut.rate = parseFloat(rateEl.value);
-      const sel = document.getElementById('voiceSelect');
-      const chosen = voices.find(v => v.name === sel.value);
-      if (chosen) ut.voice = chosen;
-
-      ut.onend = () => { if (node) node.classList.remove('reading'); currentUtterance = null; currentNode = null; if (onend) onend(); };
-      ut.onerror = () => { if (node) node.classList.remove('reading'); currentUtterance = null; currentNode = null; };
-      if (node) node.classList.add('reading');
-      currentUtterance = ut; currentNode = node;
-      synth.speak(ut);
-    }
-
     function stop() {
       if (synth.speaking || synth.pending) synth.cancel();
       if (currentNode) currentNode.classList.remove('reading');
-      currentUtterance = null; currentNode = null;
+      currentNode = null;
+    }
+    function speak(text, node=null) {
+      stop();
+      const ut = new SpeechSynthesisUtterance(text);
+      ut.rate = parseFloat(rateEl.value);
+      const chosen = pickZhTW(voices);
+      if (chosen) ut.voice = chosen;
+      ut.onend = () => { if (node) node.classList.remove('reading'); currentNode = null; };
+      ut.onerror = () => { if (node) node.classList.remove('reading'); currentNode = null; };
+      if (node) node.classList.add('reading');
+      currentNode = node;
+      synth.speak(ut);
     }
 
+    // 單行播放（單擊或雙擊都可）
     document.getElementById('content').addEventListener('click', (e) => {
-      const node = e.target.closest('.line'); if (!node) return;
+      const node = e.target.closest('.line');
+      if (!node) return;
       speak(node.textContent.trim(), node);
     });
-
     document.getElementById('content').addEventListener('dblclick', (e) => {
-      const node = e.target.closest('.line'); if (!node) return;
+      const node = e.target.closest('.line');
+      if (!node) return;
       speak(node.textContent.trim(), node);
     });
 
+    // 自動連播
     document.getElementById('readAllBtn').addEventListener('click', () => {
       const lines = Array.from(document.querySelectorAll('.line'));
       let startIndex = lines.findIndex(el => el.classList.contains('reading'));
@@ -199,12 +248,12 @@
       playNext();
     });
 
+    // 朗讀選取文字 + 基本控制
     document.getElementById('readSelectionBtn').addEventListener('click', () => {
       const sel = window.getSelection();
       const text = (sel && sel.toString().trim()) || '';
       if (text) speak(text);
     });
-
     document.getElementById('pauseBtn').addEventListener('click', () => { if (synth.speaking) synth.pause(); });
     document.getElementById('resumeBtn').addEventListener('click', () => { if (synth.paused) synth.resume(); });
     document.getElementById('stopBtn').addEventListener('click', stop);
