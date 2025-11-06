@@ -174,12 +174,12 @@
     let voices = [];
     let currentNode = null;
 
-    // 繁體中文語音優先
-    function pickZhTW(vs) {
-      let v = vs.find(v => /zh-TW|zh_Hant|zh-HK/i.test(v.lang));
-      if (!v) v = vs.find(v => /^zh/i.test(v.lang));
-      return v || null;
-    }
+function pickZhTW(vs) {
+  // 只挑選語音代碼中明確標示 zh-TW（台灣）
+  let v = vs.find(v => /zh-TW/i.test(v.lang));
+  return v || null;
+}
+
     function populateVoices() { voices = synth.getVoices(); }
     populateVoices();
     if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
@@ -252,3 +252,4 @@
   </script>
 </body>
 </html>
+
